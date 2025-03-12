@@ -6,11 +6,11 @@ const cors = require("cors")
 const app = express()
 const port = 5000
 
-// Luo MySQL-yhteys
+// Luo MySQL-yhteysc
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "", // Aseta salasana, jos sellainen on
+  password: "", 
   database: "ravintolavaunu",
 })
 
