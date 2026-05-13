@@ -1,29 +1,24 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import Confirmation from "./components/Confirmation"
 import Menu from "./components/Menu"
 import Order from "./components/Order"
-import StaffView from "./components/StaffView"
 import PaymentForm from "./components/PaymentForm"
 
 import "./App.css"
+
+const MOCK_MENU = [
+  { id: 1, nimi: "Lihapullat", hinta: 8.90, kuvaus: "Perinteiset lihapullat perunamuusilla" },
+  { id: 2, nimi: "Kahvi", hinta: 3.50, kuvaus: "Tuore suodatinkahvi" },
+  { id: 3, nimi: "Croissant", hinta: 4.50, kuvaus: "Tuore voisarvi" },
+  { id: 4, nimi: "Siideri", hinta: 5.90, kuvaus: "Olvi siideri 0,33 l" },
+  { id: 5, nimi: "Vesi", hinta: 2.00, kuvaus: "Kivennäisvesi 0,5 l" },
+]
 
 const App = () => {
   const [order, setOrder] = useState([])
   const [isOrderConfirmed, setIsOrderConfirmed] = useState(false)
   const [selectedSeat, setSelectedSeat] = useState("")
   const [showPaymentForm, setShowPaymentForm] = useState(false)
-  const [menuItems, setMenuItems] = useState([])
-
-  // Hae tuotteet tietokannasta
-  useEffect(() => {
-    fetch("https://vr-vaunu-backend-production.up.railway.app/api/tuotteet") // Tarkista osoite
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Haetut tuotteet:", data) // Lisää tämä debuggausta varten
-        setMenuItems(data)
-      })
-      .catch((error) => console.error("Virhe tuotteiden haussa:", error))
-  }, [])
 
   const seats = ["Paikka 1", "Paikka 2", "Paikka 3", "Paikka 4", "Paikka 5"]
 
@@ -39,25 +34,9 @@ const App = () => {
     setShowPaymentForm(true)
   }
 
-  const handlePayment = (paymentData) => {
-    const tilaus = {
-      asiakas_id: 1, // Oletetaan, että asiakas on kirjautunut
-      istumapaikka: selectedSeat,
-      tuotteet: order.map((item) => ({ id: item.id, määrä: 1 })), // Oletetaan, että määrä on aina 1
-    }
-
-    fetch("https://vr-vaunu-backend-production.up.railway.app/api/tilaukset", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(tilaus),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Tilaus vastaus:", data)
-        setIsOrderConfirmed(true)
-        setShowPaymentForm(false)
-      })
-      .catch((error) => console.error("Virhe tilauksen luonnissa:", error))
+  const handlePayment = () => {
+    setIsOrderConfirmed(true)
+    setShowPaymentForm(false)
   }
 
   return (
@@ -72,14 +51,14 @@ const App = () => {
               onChange={(e) => setSelectedSeat(e.target.value)}
             >
               <option value="">Valitse paikka</option>
-              {seats.map((seat, index) => (
-                <option key={index} value={seat}>
+              {seats.map((seat) => (
+                <option key={seat} value={seat}>
                   {seat}
                 </option>
               ))}
             </select>
           </div>
-          <Menu items={menuItems} onAddToOrder={handleAddToOrder} />
+          <Menu items={MOCK_MENU} onAddToOrder={handleAddToOrder} />
           <Order order={order} onConfirmOrder={handleConfirmOrder} />
           {showPaymentForm && (
             <PaymentForm
