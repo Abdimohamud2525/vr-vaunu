@@ -16,7 +16,7 @@ const App = () => {
 
   // Hae tuotteet tietokannasta
   useEffect(() => {
-    fetch("http://localhost:5000/api/tuotteet") // Tarkista osoite
+    fetch("https://vr-vaunu-backend-production.up.railway.app/api/tuotteet") // Tarkista osoite
       .then((response) => response.json())
       .then((data) => {
         console.log("Haetut tuotteet:", data) // Lisää tämä debuggausta varten
@@ -46,7 +46,7 @@ const App = () => {
       tuotteet: order.map((item) => ({ id: item.id, määrä: 1 })), // Oletetaan, että määrä on aina 1
     }
 
-    fetch("http://localhost:5000/api/tilaukset", {
+    fetch("https://vr-vaunu-backend-production.up.railway.app/api/tilaukset", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(tilaus),
