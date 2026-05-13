@@ -4,14 +4,14 @@ const bodyParser = require("body-parser")
 const cors = require("cors")
 
 const app = express()
-const port = 5000
+const port = process.env.PORT || 5000
 
-// Luo MySQL-yhteysc
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "", 
-  database: "ravintolavaunu",
+  host: process.env.MYSQLHOST || "localhost",
+  user: process.env.MYSQLUSER || "root",
+  password: process.env.MYSQLPASSWORD || "",
+  database: process.env.MYSQLDATABASE || "ravintolavaunu",
+  port: process.env.MYSQLPORT || 3306,
 })
 
 // Yhdistä tietokantaan
